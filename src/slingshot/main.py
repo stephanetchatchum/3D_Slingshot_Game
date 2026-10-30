@@ -3,8 +3,8 @@ from .simulation.system import simulate_step
 import numpy as np
 import math
 
-G = 100
-m_sun = 10
+G = 1
+m_sun = 1
 m_planet = 0.5
 dt = 0.01
 
