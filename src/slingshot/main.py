@@ -1,15 +1,27 @@
 from ursina import *
 from .simulation.system import simulate_step
 import numpy as np
+import math
 
-G = 1
-m_sun = 1
+G = 100
+m_sun = 10
 m_planet = 0.5
 dt = 0.01
+
 sun_position = np.array([0,0,0])
 planet_position = np.array([5,0,0])
-sun_velocity = np.array([0, -0.18257, 0])
-planet_velocity = np.array([0, 0.36513, 0])
+relative_position = planet_position - sun_position
+distance = np.linalg.norm(relative_position)
+relative_speed = math.sqrt((G*(m_sun+m_planet)/distance))
+
+orbital_normal = np.array([0,0,1])
+direction = np.cross(orbital_normal, relative_position)
+direction = direction / np.linalg.norm(direction)
+
+relative_velocity = relative_speed * direction
+
+sun_velocity = -(m_planet*relative_velocity)/(m_planet+m_sun)
+planet_velocity = (m_sun*relative_velocity)/(m_planet+m_sun)
 
 time_scale = 10
 
