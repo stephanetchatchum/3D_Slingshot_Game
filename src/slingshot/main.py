@@ -4,8 +4,8 @@ import numpy as np
 import math
 
 G = 1
-m_sun = 1
-m_planet = 0.5
+m_sun = 10
+m_planet = 3
 dt = 0.01
 
 sun_position = np.array([0,0,0])

@@ -1,1 +1,23 @@
+# Virtual environments
 .venv/
+venv/
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Test and tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Build files
+build/
+dist/
+*.egg-info/
+
+# Editor and operating system files
+.vscode/
+.DS_Store
+Thumbs.db

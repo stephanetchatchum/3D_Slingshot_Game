@@ -54,8 +54,8 @@ def rk4_step(state, dt, derivative_func, G, m_sun, m_planet):
 
 
     new_state = tuple(
-        y + (dt/6)*(k1+2*k2+2*k3+k4)
-        for y, k1, k2, k3, k4 in zip(state, k1, k2, k3, k4)
+        y + (dt/6)*(a+2*b+2*c+d)
+        for y, a, b, c, d in zip(state, k1, k2, k3, k4)
     )
 
     return new_state
