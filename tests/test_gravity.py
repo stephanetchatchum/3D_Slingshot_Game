@@ -24,3 +24,5 @@ def test_gravitational_forces_are_equal_and_opposite():
     sun_force = 10*sun_acceleration
 
     assert np.allclose(planet_force, -sun_force)
+
+
