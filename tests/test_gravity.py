@@ -1,5 +1,6 @@
 import numpy as np
-from slingshot.physics.gravity import calculate_accelerations
+from slingshot.physics.gravity import calculate_accelerations, calculate_probe_acceleration
+
 def test_gravitational_acceleration():
     sun_position = np.array([0.0, 0.0, 0.0])
     planet_position = np.array([5.0, 0.0, 0.0])
@@ -25,4 +26,13 @@ def test_gravitational_forces_are_equal_and_opposite():
 
     assert np.allclose(planet_force, -sun_force)
 
+def test_probe_acceleration():
+    sun_position = np.array([0.0, 0.0, 0.0])
+    planet_position = np.array([5.0, 0.0, 0.0])
+    probe_position = np.array([2.0, 0.0, 0.0])
 
+    acceleration = calculate_probe_acceleration(1, 10, 3, sun_position, planet_position, probe_position)
+
+    expected = np.array([-2.1666666667, 0.0, 0.0])
+
+    assert np.allclose(acceleration, expected)
