@@ -1,5 +1,8 @@
 from ursina import *
 from .simulation.system import simulate_step
+from .visuals.celestial_bodies import create_sun, create_planet, create_probe
+from .visuals.trails import create_trail, update_trail
+from .visuals.starfield import create_starfield
 import numpy as np
 import math
 
@@ -27,45 +30,37 @@ planet_velocity = (m_sun*relative_velocity)/(m_planet+m_sun)
 time_scale = 1
 
 app = Ursina()
+window.color = color.Color(0.01, 0.02, 0.06, 1) 
+create_starfield()
 
-sun = Entity(
-    model='sphere',
-    color=color.yellow,
-    scale=2
-)
+sun = create_sun()
 
-planet = Entity(
-    model='sphere',
-    color=color.blue,
-    scale=1,
-    position=(10, 0, 0)
-)
+planet = create_planet()
 
-probe = Entity(
-    model='sphere',
+probe = create_probe(probe_position)
+
+sun_trail = create_trail(color.orange, 2)
+planet_trail = create_trail(color.azure, 2)
+probe_trail = create_trail(color.white, 2)
+
+AmbientLight(color=color.rgba32(20, 20, 30, 255))
+DirectionalLight(
     color=color.white,
-    scale=0.3,
-    position=probe_position
+    direction=(1, -1, -1)
 )
 
-sun_trail = Entity(
-    model=Mesh(vertices=[], mode='line', thickness=3),
-    color=color.yellow
+
+
+editor_camera = EditorCamera(
+    rotation=(20, -35, 0),
+    position=(0, 0, -15),
+    move_speed=15,
+    rotation_speed=150,
+    zoom_speed=1.5
 )
 
-planet_trail = Entity(
-    model=Mesh(vertices=[], mode='line', thickness=2),
-    color=color.azure
-)
-
-probe_trail = Entity(
-    model=Mesh(vertices=[], mode='line', thickness=2),
-    color=color.white
-)
-
-DirectionalLight()
-AmbientLight()
-EditorCamera()
+camera.position = (0, 0, -25)
+camera.look_at(Vec3(5, 0, 0))
 
 physics_accumulator = 0.0
 physics_time_step = 0.001
@@ -96,22 +91,16 @@ def update():
     planet.position = Vec3(*planet_position)
     probe.position = Vec3(*probe_position)
 
+    planet.rotation_y += 20 * time.dt * time_scale
+    planet.clouds.rotation_y += 4 * time.dt * time_scale
+    sun.rotation_y += 3 * time.dt * time_scale
 
     sun_path.append(Vec3(*sun_position))
     planet_path.append(Vec3(*planet_position))
     probe_path.append(Vec3(*probe_position))
 
-    sun_trail.model.vertices = sun_path
-    if len(sun_path) >= 2:
-        sun_trail.model.vertices = sun_path
-        sun_trail.model.generate()
-
-    if len(planet_path) >= 2:
-        planet_trail.model.vertices = planet_path
-        planet_trail.model.generate()
-
-    if len(probe_path) >= 2:
-        probe_trail.model.vertices = probe_path
-        probe_trail.model.generate()
+    update_trail(sun_trail, sun_path)
+    update_trail(planet_trail, planet_path)
+    update_trail(probe_trail, probe_path)
 
 app.run()
